@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f7fb" />
+  <meta name="description" content="A clean and focused task manager to plan, prioritize, and complete your day." />
+  <title>Daymark — Task Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Daymark home">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span>daymark</span>
+      </a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Task views">
+        <button class="nav-item active" data-view="all"><span class="nav-icon">▦</span> All tasks <span class="nav-count" id="allCount">0</span></button>
+        <button class="nav-item" data-view="today"><span class="nav-icon">◷</span> Today <span class="nav-count" id="todayCount">0</span></button>
+        <button class="nav-item" data-view="upcoming"><span class="nav-icon">▤</span> Upcoming</button>
+        <button class="nav-item" data-view="completed"><span class="nav-icon">✓</span> Completed</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="focus-card">
+          <div class="focus-icon">✦</div>
+          <p class="focus-title">Make room for focus.</p>
+          <p class="focus-copy">Small steps add up to meaningful progress.</p>
+          <div class="focus-progress"><span id="focusProgress"></span></div>
+          <div class="focus-foot"><span>Daily progress</span><strong id="progressText">0%</strong></div>
+        </div>
+        <div class="profile">
+          <div class="avatar">D</div>
+          <div><strong>My workspace</strong><span>Personal plan</span></div>
+          <span class="profile-dots">•••</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbView">All tasks</strong></div>
+        <div class="topbar-right"><span class="today-date" id="headerDate"></span><span class="top-avatar">D</span></div>
+      </header>
+
+      <section class="page">
+        <div class="welcome-row">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR PERSONAL SPACE</div>
+            <h1 id="pageTitle">A clearer day <span>starts here.</span></h1>
+            <p class="page-subtitle" id="pageSubtitle">Keep your priorities close and your progress visible.</p>
+          </div>
+          <button class="primary-btn" id="addTaskBtn"><span>＋</span> Add a task</button>
+        </div>
+
+        <section class="stats-grid" aria-label="Task overview">
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-label">Total tasks</span><span class="stat-icon lavender">▦</span></div>
+            <div class="stat-number" id="totalStat">0</div><div class="stat-note">Across your workspace</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-label">In progress</span><span class="stat-icon blue">◷</span></div>
+            <div class="stat-number" id="pendingStat">0</div><div class="stat-note">One step at a time</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-label">Completed</span><span class="stat-icon green">✓</span></div>
+            <div class="stat-number" id="completedStat">0</div><div class="stat-note"><span id="completionRate">0%</span> completion rate</div>
+          </article>
+        </section>
+
+        <section class="task-panel">
+          <div class="panel-heading">
+            <div><h2 id="listTitle">Your tasks</h2><p id="listDescription">A little progress each day adds up.</p></div>
+            <button class="subtle-btn" id="clearCompletedBtn">Clear completed</button>
+          </div>
+          <div class="toolbar">
+            <label class="search-box"><span>⌕</span><input type="search" id="searchInput" placeholder="Search tasks..." aria-label="Search tasks"></label>
+            <div class="toolbar-filters">
+              <select id="priorityFilter" aria-label="Filter by priority"><option value="all">All priorities</option><option value="high">High priority</option><option value="medium">Medium priority</option><option value="low">Low priority</option></select>
+              <select id="sortSelect" aria-label="Sort tasks"><option value="created">Recently added</option><option value="due">Due date</option><option value="priority">Priority</option></select>
+            </div>
+          </div>
+          <div class="task-list" id="taskList"></div>
+          <div class="empty-state" id="emptyState">
+            <div class="empty-illustration"><span>✓</span></div>
+            <h3 id="emptyTitle">A fresh start.</h3>
+            <p id="emptyCopy">Your task list is clear. Add a task to get moving.</p>
+            <button class="primary-btn small" id="emptyAddBtn">＋ Create your first task</button>
+          </div>
+          <div class="panel-footer"><span id="footerCount">0 tasks</span><span><span class="footer-dot"></span> Saved on this device</span></div>
+        </section>
+        <footer class="app-footer">Designed for a little more clarity, every day. <span>DAYMARK © <span id="year"></span></span></footer>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="task-dialog" id="taskDialog">
+    <form id="taskForm">
+      <div class="dialog-header"><div><div class="eyebrow">TASK DETAILS</div><h2 id="dialogTitle">Create a task</h2></div><button type="button" class="close-btn" id="closeDialog" aria-label="Close">×</button></div>
+      <label class="field-label" for="taskTitle">Task name <span>*</span></label>
+      <input class="text-field" id="taskTitle" name="title" maxlength="120" placeholder="e.g. Finish project presentation" required />
+      <label class="field-label" for="taskDescription">Description <small>OPTIONAL</small></label>
+      <textarea class="text-field description-field" id="taskDescription" name="description" maxlength="400" placeholder="Add a few details to help you get started..."></textarea>
+      <div class="form-row">
+        <div class="form-column"><label class="field-label" for="taskPriority">Priority</label><select class="text-field" id="taskPriority" name="priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+        <div class="form-column"><label class="field-label" for="taskDue">Due date</label><input class="text-field" id="taskDue" name="due" type="date" /></div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="cancel-btn" id="cancelDialog">Cancel</button><button type="submit" class="primary-btn" id="saveTaskBtn">Save task <span>→</span></button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
