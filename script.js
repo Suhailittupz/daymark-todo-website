@@ -108,6 +108,28 @@ $("priorityFilter").addEventListener("change",e=>{state.priority=e.target.value;
 $("sortSelect").addEventListener("change",e=>{state.sort=e.target.value;render();});
 $("clearCompletedBtn").addEventListener("click",()=>{const n=state.tasks.filter(t=>t.completed).length;if(n&&confirm(`Clear ${n} completed ${n===1?"task":"tasks"}?`)){state.tasks=state.tasks.filter(t=>!t.completed);saveTasks();showToast("Completed tasks cleared.");}});
 $("mobileMenu").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+// DARK MODE FUNCTIONALITY
+
+const themeToggle = $("themeToggle");
+
+// Load previously saved theme
+if (localStorage.getItem("daymark.theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    themeToggle.textContent = "☀️ Light Mode";
+}
+
+// Switch between themes
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDark = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem("daymark.theme", isDark ? "dark" : "light");
+
+    themeToggle.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+
+});
 $("headerDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 $("year").textContent=new Date().getFullYear();
 render();
